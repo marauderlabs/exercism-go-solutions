@@ -15,8 +15,8 @@ func IsPangram(s string) bool {
 			continue
 		}
 
-		if 'A' <= r && r <= 'Z' { // upper to lower
-			r += 'a' - 'A'
+		if unicode.IsUpper(r) {
+			r = unicode.ToLower(r)
 		}
 
 		if !foundRune[r-'a'] {
