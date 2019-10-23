@@ -2,8 +2,10 @@ package clock
 
 import "fmt"
 
-// Clock represents the clock time in hours and minutes
-type Clock int
+// Clock represents the clock time as minutes since midnight (0000 hours or 12:00AM)
+type Clock struct {
+	mins int
+}
 
 const (
 	minsInHour = 60
@@ -19,26 +21,19 @@ func New(h, m int) Clock {
 		mins += minsInDay
 	}
 
-	return Clock(mins)
+	return Clock{mins}
 }
 
 func (c Clock) String() string {
-	var h int
-	var m int
-	i := int(c)
-
-	h = i / minsInHour
-	m = i % minsInHour
-
-	return fmt.Sprintf("%02v:%02v", h, m)
+	return fmt.Sprintf("%02d:%02d", c.mins/minsInHour, c.mins%minsInHour)
 }
 
 // Add adds a minutes to c
 func (c Clock) Add(a int) Clock {
-	return New(0, int(c)+a)
+	return New(0, c.mins+a)
 }
 
 // Subtract subtracts s minutes from c
 func (c Clock) Subtract(s int) Clock {
-	return New(0, int(c)-s)
+	return New(0, c.mins-s)
 }
