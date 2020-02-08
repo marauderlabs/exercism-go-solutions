@@ -17,18 +17,19 @@ var maxPossibleNames = 26 * 26 * 10 * 10 * 10
 
 // Name returns a new name for a robot
 func (r *Robot) Name() (string, error) {
-	if r.name == "" {
-		if len(generated) == maxPossibleNames {
-			return "", errors.New("Reached max allowed possible names")
-		}
-
-		exists := true
-		for exists {
-			r.name = randNameString()
-			_, exists = generated[r.name]
-		}
-		generated[r.name] = true
+	if r.name != "" {
+		return r.name, nil
 	}
+
+	if len(generated) == maxPossibleNames {
+		return "", errors.New("Reached max allowed possible names")
+	}
+
+	r.name = randNameString()
+	for generated[r.name] {
+		r.name = randNameString()
+	}
+	generated[r.name] = true
 	return r.name, nil
 }
 
@@ -38,14 +39,9 @@ func (r *Robot) Reset() {
 }
 
 func randNameString() string {
-	return fmt.Sprintf("%s%s%d%d%d", string(randChar()), string(randChar()),
-		randInt(), randInt(), randInt())
+	return fmt.Sprintf("%s%s%03d", randString(), randString(), rand.Intn(1000))
 }
 
-func randChar() rune {
-	return rune('A' + rand.Intn(26))
-}
-
-func randInt() int {
-	return rand.Intn(10)
+func randString() string {
+	return string('A' + rand.Intn(26))
 }
